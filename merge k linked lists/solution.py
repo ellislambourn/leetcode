@@ -1,31 +1,33 @@
+import heapq
+# minheap
+
 # Definition for singly-linked list.
 # class ListNode:
 #     def __init__(self, val=0, next=None):
 #         self.val = val
 #         self.next = next
 
+class NodeWrapper:
+    def __init__(self, node):
+        self.node = node
+
+    def __lt__(self, other):
+        return self.node.val < other.node.val
+
 class Solution:    
     def mergeKLists(self, lists: List[Optional[ListNode]]) -> Optional[ListNode]:
-        if not any(lists): # if no lists
+        heap = [NodeWrapper(node) for node in lists if node] 
+        if not lists:
             return None
-        # this is the case for merging two lists
+        # the heap is a python list of node (nodewrapper so direct comparison can be made on node by heapq). i want the minimum which heapq does anyways.
         head = ListNode()
-        prev = head
-        currNodes = [node for node in lists if node]
+        curr = head
+        heapq.heapify(heap)
+        while heap:
+            node = heapq.heappop(heap) # node is smallest node
+            if node.node.next:
+                heapq.heappush(heap, NodeWrapper(node.node.next))
+            curr.next = node.node
+            curr = curr.next
 
-
-
-        while any(currNodes):
-            # find lower of these.
-            prev.next = min(currNodes,  key= lambda node: node.val)
-            i = currNodes.index(prev.next)
-
-            prev = prev.next
-
-
-            # this keeps all nodes in currNodes active
-            if currNodes[i].next is None:
-                currNodes.pop(i)
-            else:
-                currNodes[i] = currNodes[i].next
         return head.next
