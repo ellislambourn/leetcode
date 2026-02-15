@@ -7,24 +7,18 @@
 
 class Solution:
     def maxDepth(self, root: Optional[TreeNode]) -> int:
-        #  bfs approach
+        #  iterative df approach
         if not root:
-            return 0 
-
-        q = deque([root])
+            return 0
         res = 1
-
-        while q:
-
-            for i in range(len(q)):
-
-                node = q.popleft()
-                if node.left:
-                    q.append(node.left)
-                
-                if node.right:
-                    q.append(node.right)
+        stack = [(root, 1)] # (node, depth)
+        while stack:
+            node, depth = stack.pop()
+            if node.right:
+                stack.append((node.right, depth+1))
             
-            res +=1
-
-        return res -1
+            if node.left:
+                stack.append((node.left, depth+1))
+            res = max(res, depth)
+        return res
+            
