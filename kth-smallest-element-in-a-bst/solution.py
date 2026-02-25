@@ -7,15 +7,19 @@
 
 class Solution:
     def kthSmallest(self, root: Optional[TreeNode], k: int) -> int:
-        # non optimal would do an inorder traversal then find kth index.
-        res = []
+        # optimal is to do inorder traversal but just return the val once k nodes have been visited.
+        res = root.val
+        
         def inorder(node):
-            if not node or len(res) >= k:
+            nonlocal k, res
+            if not node:
                 return
             inorder(node.left)
-            res.append(node.val)
+            k -= 1
+            if k == 0:
+                res = node.val
+                return
             inorder(node.right)
         
         inorder(root)
-
-        return res[k-1]
+        return res
