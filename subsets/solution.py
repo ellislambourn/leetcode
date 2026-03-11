@@ -1,12 +1,22 @@
 class Solution:
     def subsets(self, nums: List[int]) -> List[List[int]]:
-        # binary bitwise
+        # backtracking dfs
         res = []
-        for mask in range(1 << len(nums)): # 2 raised to len(nums)
-            subset = []
-            for j in range(len(nums)):
-                if mask & (1 << j):
-                    subset.append(nums[j])
-            res.append(subset)
+        subset = [] 
+
+        def dfs(i):
+            if i >= len(nums):
+                res.append(subset.copy())
+                return
+            
+            # include the current item 
+            subset.append(nums[i])
+            dfs(i+1)
+
+            # dont include the current item
+            subset.pop()
+            dfs(i+1)
+        dfs(0)
+
         return res
             
