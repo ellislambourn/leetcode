@@ -4,17 +4,22 @@ class Solution:
         res = []
         subset = []
         # this is combination sum 1 again but cant visit same candidate[i]
+        # this version makes sure duplicates arent included in solution. 
 
         def dfs(i, curr):
-            if i >= len(candidates):
+            if curr == target:
+                res.append(subset.copy())
                 return
             
             for j in range(i, len(candidates)):
+                if j > i and candidates[j] == candidates[j-1]:
+                    continue
+                    
                 if curr + candidates[j] > target:
-                    return
+                    break
+                
                 subset.append(candidates[j])
-                if curr + candidates[j] == target and subset not in res:
-                    res.append(subset.copy())
+                
                 dfs(j+1, curr + candidates[j])
                 subset.pop()
                 
