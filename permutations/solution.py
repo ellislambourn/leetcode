@@ -2,23 +2,24 @@ class Solution:
     def permute(self, nums: List[int]) -> List[List[int]]:
         res = []
         subset = []
-        visited = set() # can replace for a dictionary of {num : T/F}
 
-        def rec(length):
-            if length == len(nums):
+        def rec(visited):
+            if len(subset) == len(nums):
                 res.append(subset.copy())
                 return
 
-            for num in nums:
-                if num in visited:
+            for i in range(len(nums)):
+                if visited & (1 << i): # if this bit is active
                     continue
                 
-                subset.append(num)
-                visited.add(num)
+                subset.append(nums[i])
+                visited = visited | (1 << i) # include this bit
 
-                rec(length + 1)
+                rec(visited)
                 
                 subset.pop()
-                visited.discard(num)
+                visited &= ~(1 << i) #remove this bit
+            
         rec(0)
+
         return res
