@@ -1,0 +1,39 @@
+class Solution:
+    def exist(self, board: List[List[str]], word: str) -> bool:
+        rowLen = len(board)
+        colLen = len(board[0])
+        # need to keep track of visited
+        visited = set() # set of (int, int) coords
+
+        def rec(i, curr: tuple[int, int]):
+            if i == len(word):
+                return True
+            if (
+                curr[0] < 0 or curr[0] >= rowLen or
+                curr[1] < 0 or curr[1] >= colLen or
+                (curr[0], curr[1]) in visited or
+                board[curr[0]][curr[1]] != word[i] ):
+
+                return False
+
+            
+            visited.add(curr)
+            res = (
+                rec(i+1, (curr[0]+1, curr[1])) or
+                rec(i+1, (curr[0]-1, curr[1])) or
+                rec(i+1, (curr[0], curr[1]+1)) or
+                rec(i+1, (curr[0], curr[1]-1))
+            )
+            visited.remove(curr)
+            
+            return res
+
+        for j in range(colLen):
+            for i in range(rowLen):
+                if rec(0, (i, j)):
+                    return True
+
+        return False
+
+
+
