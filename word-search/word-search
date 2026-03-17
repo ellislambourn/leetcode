@@ -3,7 +3,7 @@ class Solution:
         rowLen = len(board)
         colLen = len(board[0])
         # need to keep track of visited
-        visited = set() # set of (int, int) coords
+        # keeping a set of visited is apparently the thing slowing me down so ill use a method of editing the words array.
 
         def rec(i, curr: tuple[int, int]):
             if i == len(word):
@@ -11,20 +11,21 @@ class Solution:
             if (
                 curr[0] < 0 or curr[0] >= rowLen or
                 curr[1] < 0 or curr[1] >= colLen or
-                (curr[0], curr[1]) in visited or
+                board[curr[0]][curr[1]] == "#" or
                 board[curr[0]][curr[1]] != word[i] ):
 
                 return False
 
             
-            visited.add(curr)
+            board[curr[0]][curr[1]] = "#"
             res = (
                 rec(i+1, (curr[0]+1, curr[1])) or
                 rec(i+1, (curr[0]-1, curr[1])) or
                 rec(i+1, (curr[0], curr[1]+1)) or
                 rec(i+1, (curr[0], curr[1]-1))
             )
-            visited.remove(curr)
+            board[curr[0]][curr[1]] = word[i]
+
             
             return res
 
